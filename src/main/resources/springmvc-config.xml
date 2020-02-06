@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/aop
+		                http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:property-placeholder location="classpath:settings.properties"/>
+
+    <!-- 开启AOP自动代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+    <context:component-scan
+            base-package="com.pgl.xiao.controller">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven>
+        <!--配置@ResponseBody由fastjson解析-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="defaultCharset" value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <bean id="fastJsonpResponseBodyAdvice" class="com.alibaba.fastjson.support.spring.FastJsonpResponseBodyAdvice">
+        <constructor-arg>
+            <list>
+                <value>callback</value>
+                <value>jsonp</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- 处理静态资源 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!-- 文件大小最大值 -->
+        <property name="maxUploadSize" value="${upload.maxSize}"/>
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+
+    <mvc:resources location="/" mapping="/**/*.html"/>
+    <mvc:resources mapping="html/admin/*.html" location="/"/>
+    <mvc:resources location="/" mapping="/**/*.js"/>
+    <mvc:resources location="/" mapping="/**/*.css"/>
+    <mvc:resources location="/" mapping="/**/*.png"/>
+    <mvc:resources location="/" mapping="/**/*.gif"/>
+    <mvc:resources location="/" mapping="/**/*.jpg"/>
+</beans>

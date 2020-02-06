@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+		<script>
+			var name = 'comment/';
+		</script>
+		<script type="text/javascript" src="../js/crud.js"></script>
+	</head>
+	<body class="easyui-layout" style="overflow-y:scroll;">
+		<div id="tab" class="easyui-tabs" data-options="region: 'center'" style="border: 0px">
+			<div class="easyui-panel panel-style" style="padding: 10px; border: 0px;">
+				<form id="contentAddForm" enctype="multipart/form-data" class="itemForm" method="post" style="margin: 10px;">
+					<input type="hidden" name="id" /><!-- 存放的是被选中的内容分类的id -->
+					<div >
+						<input class="easyui-textbox input-style" name="username" data-options="label:'作者:',required:true"/>
+					</div>
+					<div >
+						<input class="easyui-textbox input-style" name="articlename"  data-options="label:'所属文章:',required:true">
+					</div>
+					<div >
+						时间范围： <input name="addate" type="text" class="easyui-datetimebox input-style" />
+					</div>
+					<div >
+						状态： <select id="status" class="easyui-combobox select-style" name="status" style="width:200px;"></select>
+					</div>
+					<div >
+						内容：<br/><textarea class="textarea-style " data-options="label:'内容:',required:true" name="content"></textarea>
+					</div>
+					<div >
+						<input class="easyui-numberbox input-style" name="praise" data-options="label:'点赞数:',required:true">
+					</div>
+					<div style="padding:5px">
+						<a href="javascript:void(0)" class="easyui-linkbutton"  data-options="iconCls:'icon-save'" onclick="saveData();">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo'" onclick="contentAddPage.clearForm()">重置</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+	<script>
+        $('#status').combobox({
+            url: uri + port + item + '/getState',
+            valueField: 'id',
+            textField: 'text'
+        });
+	</script>
+</html>

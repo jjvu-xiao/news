@@ -1,0 +1,103 @@
+<!DOCTYPE>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../css/general.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+	</head>
+	<body class="easyui-layout">
+	<script>
+		var name = "comment/";
+        var columns=[[
+            {field:'id',title:'编号',width:100},
+            {field:'customer',title:'发布者',width:100,
+                formatter: function(value, row, index) {
+                	if (value != null)
+                        return value.username.toString();
+					return '';
+                }},
+			{field:'article',title:'所属文章',width:100,
+				formatter:function(value, row, index){
+			    	if (value != null)
+			    	    return value.title;
+			    	return '';
+				}},
+			{field:'praise',title:'点赞数',width:100},
+			{field:'content',title:'内容',width:200,formatter: function(value,row,index){  
+					return conciseContent(value);
+				}},
+			{field:'addate',title:'发布时间',width:150,formatter: function(value,row,index) {
+					return new Date(value).Format("yyyy-MM-dd hh:mm:ss");
+				}},
+            {field:'status',title:'状态',width:100,	
+				formatter: function(value, row, index) {
+					return showStatus(value);
+				}},
+            {field:'-',title:'操作',width:300,formatter: function(value,row,index){
+                    var oper = "<a href=\"javascript:void(0)\" onclick=\"edit(" + row.id + ')">修改</a>';
+                    oper += ' <a href="javascript:void(0)" onclick="del(' + row.id + ')">删除</a>';
+                    return oper;
+                }}
+        ]];
+    </script>
+	<div id="tab" class="easyui-tabs" data-options="region: 'center'" style="border: 0px">
+		<div class="easyui-panel panel-style" style="padding: 10px; border: 0px;">
+			<form id="searchForm" style="padding: 10px;">
+				<div>
+					发布者名称： <input name="user" type="text" class="easyui-textbox input-style" />
+					所属文章名称：<input name="articlename" type="text" class="easyui-textbox input-style" />
+				</div>
+				<div>
+					点赞数： <input name="praisemin" type="text" class="easyui-textbox input-style" />
+					-
+					 <input name="praisemax" type="text" class="easyui-textbox input-style" />
+					状态： <select class="easyui-combobox select-style" name="status"></select>
+				</div>
+				<div>
+					时间范围： <input name="start" type="text" class="easyui-datetimebox input-style" />
+					-
+					<input name="end" type="text" class="easyui-datetimebox input-style" />
+				</div>
+				<div>
+					<a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton"  data-options="iconCls:'icon-search'">查询</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearSearchform();"  data-options="iconCls:'icon-clear'">重置</a>
+				</div>
+			</form>
+			<table id="grid"></table>
+			<div id="editDlg">
+				<form id="editForm" style="margin: 10px;">
+					<input type="hidden" name="id" /><!-- 存放的是被选中的内容分类的id -->
+					<div class="input-style">
+						<input class="easyui-textbox input-style" name="customer.username" data-options="label:'作者:',required:true"/>
+					</div>
+					<div class="input-style">
+						<input class="easyui-textbox input-style" name="article.title"  data-options="label:'所属文章:',required:true"/>
+					</div>
+					<div class="input-style">
+						<input name="addate" type="text" class="easyui-datetimebox input-style" data-options="label:'时间范围:',required:true" />
+					</div>
+					<div class="input-style">
+						<select class="easyui-combobox select-style" name="status" data-options="label:'状态'"></select>
+					</div>
+					<div>
+						内容：<br/><textarea rows="10" cols="45" data-options="multiline:true,required:true" name="content"></textarea>
+					</div>
+					<div >
+						<input class="easyui-numberbox input-style" name="praise" data-options="label:'点赞数:',required:true">
+					</div>
+					<div style="padding:5px">
+						<a href="javascript:void(0)" class="easyui-linkbutton"  data-options="iconCls:'icon-save'" id="btnSave">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" onclick="contentAddPage.clearForm()">重置</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/crud.js"></script>
+</html>
