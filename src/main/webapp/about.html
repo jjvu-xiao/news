@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>留言_单页_爵哥的个人博客 - 一个执着于Web全栈开发的Coder的个人博客网站</title>
+    <meta name="keywords" content="个人博客"/>
+    <meta name="description" content="爵哥的个人博客，记录自己生命成长的每一步。"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/about.css" rel="stylesheet">
+    <link href="css/m.css" rel="stylesheet">
+    <script src="js/vue/vue.min.js"></script>
+    <script src="js/vue/axios.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="js/modernizr.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <catalog :catalogs="catalogs"></catalog>
+    <article id="article">
+        <h2 class="litle"><span>像“草根”一样，紧贴着地面，低调的存在，冬去春来，枯荣无恙。</span>关于我</h2>
+        <div class="ab_box">
+            <div class="leftbox">
+                <div class="newsview">
+                    <div class="news_infos">
+                        <p v-html="descr"></p>
+                    </div>
+                </div>
+                <div class="meandblog">
+                    <h2>我和我的博客</h2>
+                    <ul>
+                        <li v-for="article in articles">
+                            <a v-bind:href="'detail.html?id=' + article.id" target="_blank">{{article.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rightbox">
+                <div class="aboutme">
+                    <h2 class="hometitle">关于我</h2>
+                    <div class="avatar"><img src="images/b04.jpg"></div>
+                    <div class="ab_con">
+                        <p>{{nickname}} | {{realname}}</p>
+                        <p>职业：{{job}} </p>
+                        <p>个人微信：{{weixin}}</p>
+                        <p>QQ：{{qq}}</p>
+                        <p>邮箱：{{email}}</p>
+
+                    </div>
+                </div>
+                <div class="weixin">
+                    <h2 class="hometitle">官方微信</h2>
+                    <ul>
+                        <img src="images/wx.jpg">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <p>Design by <a href="/">爵哥</a> <a href="/">粤ICP备11002373号-1</a></p>
+    </footer>
+</body>
+<script src="js/common.js"></script>
+<script>
+    var info = new Vue({
+        el: "article",
+        data: {
+            nickname: '',
+            realname: '',
+            job: '',
+            weixin: '',
+            email: '',
+            qq: '',
+            descr: '',
+            articles: []
+        },
+        mounted: function () { //mounted　表示这个 Vue 对象加载成功了
+            var self = this;
+            axios.get(url + "/about").then(function (response) {
+                var json = response.data;
+                self.nickname = json['me'].nickname;
+                self.realname = json['me'].realname;
+                self.job = json['me'].job;
+                self.weixin = json['me'].weixin;
+                self.email = json['me'].email;
+                self.qq = json['me'].qq;
+                self.descr = json['me'].descr;
+                self.articles = json['articles'];
+            })
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+		<link href="../js/kindeditor/themes/default/default.css" type="text/css" rel="stylesheet">
+		<script type="text/javascript" charset="utf-8" src="../js/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="../js/kindeditor/lang/zh_CN.js"></script>
+		<script type="text/javascript" src="../js/crud.js"></script>
+	</head>
+	<body class="easyui-layout" style="overflow-y:scroll;overflow-x: scroll;">
+		<script>
+            var name = "article/";
+		</script>
+		<div id="tab" class="easyui-tabs" data-options="region: 'center'" style="border: 0px;overflow-y: scroll">
+			<!--<div class="easyui-panel panel-style" style="padding: 10px; border: 0px;">-->
+				<form id="contentAddForm"  class="itemForm" method="post" style="margin: 10px;overflow-x: scroll;">
+					<!--<input type="hidden" name="categoryId" />-->
+					<div>
+						<input class="easyui-textbox input-style" name="title" data-options="label:'标题:',required:true"/>
+					</div>
+					<div>
+						<input class="easyui-textbox input-style" name="author"  data-options="label:'作者:',required:true">
+					</div>
+					<div>
+						<input class="easyui-numberbox input-style" name="praise" data-options="label:'点赞数:',required:true">
+					</div>
+					<div>
+						<input class="easyui-numberbox input-style" name="clicks" data-options="label:'点击数:',required:true">
+					</div>
+					<div>
+						所属栏目： <select id="type" class="easyui-combobox select-style" name="type"></select>
+					</div>
+					<div>
+						状态： <select id="state" class="easyui-combobox select-style" name="status"></select>
+					</div>
+					<div>
+						<textarea id="content" style="width:1000px;height:600px;overflow-x: scroll;" data-options="label:'内容:',required:true" name="content"></textarea>
+					</div>
+					<div>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveData();">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" onclick="contentAddForm.clearForm()">重置</a>
+					</div>
+				</form>
+			<!--</div>-->
+		</div>
+	</body>
+	<script type="text/javascript">
+		var editor = null;
+		KindEditor.ready(function(K) {
+			window.editor = K.create('#content', {
+                items : [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+                    'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                    'anchor', 'link', 'unlink', '|', 'about'
+                ],
+				filePostName: "uploadFile",
+				uploadJson:  uri + port + item + mode + 'img/' + 'save', //uri item
+				resizeType: 1,
+                afterBlur: function(){this.sync();},
+				formatUploadUrl: false,
+                allowPreviewEmoticons : true,
+                allowImageUpload : true
+			});
+			editor.html($("#content").html());
+		});
+
+
+		// 生成栏目查询的下拉框
+		$('#type').combobox({
+			url: uri + port + item + '/loadCatalogs',
+			valueField: 'id',
+			textField: 'name',
+			method: 'GET'
+		});
+
+        // 生成状态查询的下拉框
+        $('#state').combobox({
+            url: uri + port + item + 'getState',
+            valueField: 'id',
+            textField: 'text'
+        });
+	</script>
+</html>

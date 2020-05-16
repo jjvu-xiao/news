@@ -1,0 +1,166 @@
+<!DOCTYPE>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+		<link href="../js/kindeditor/themes/default/default.css" type="text/css" rel="stylesheet">
+		<script type="text/javascript" charset="utf-8" src="../js/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="../js/kindeditor/lang/zh_CN.js"></script>
+		<script type="text/javascript" src="../js/crud.js"></script>
+	</head>
+	<style>
+		form div {
+			margin-left:20px;
+		}
+	</style>
+	<body class="easyui-layout">
+		<script>
+			var width =  680;
+			var height = 300;
+	    var name = "article/";
+	    var columns=[[
+	        {field:'id',title:'编号',width:100},
+	        {field:'title',title:'标题',width:150},
+			{field:'author',title:'作者',width:150},
+			{field:'clicks',title:'点击量',width:100},
+			{field:'praise',title:'点赞数',width:100},
+			{field:'releasedate',title:'发布日期',width:150,
+				formatter: function(value,row,index) {
+					return new Date(value).Format("yyyy-MM-dd hh:mm:ss");
+				}
+			},
+			{field:'lastupdate',title:'更新日期',width:150,
+				formatter: function(value,row,index) {
+					new Date(value).Format("yyyy-MM-dd hh:mm:ss");
+				}
+			},
+			{field:'content',title:'内容',width:300,
+				formatter: function(val,row,index){
+			    	var value = String(val);
+  					if(value.length>20)
+						return "<span title='"+value+"'>"+value.substring(0,20)+"..."+"</span>";
+					else
+						return "<span title='"+value+"'>"+value.substring(0,value.length)+"</span>";
+				}},
+	        {field:'status',title:'状态',width:100,
+				formatter: function(value, row, index) {
+					return showStatus(value);
+				}},
+	        {field:'-',title:'操作',width:300,formatter: function(value,row,index){
+	                var oper = "<a href=\"javascript:void(0)\" onclick=\"edit(" + row.id + ')">修改</a>';
+	                oper += ' <a href="javascript:void(0)" onclick="del(' + row.id + ')">删除</a>';
+	                return oper;
+	            }}
+	    ]];
+	</script>
+		<!--class="easyui-tabs" -->
+		<div id="tab" data-options="region: 'center'" style="border: 0px;background-color: rgb(238, 238, 238);">
+			<!--<div class="easyui-panel panel-style" style="padding: 10px; border: 0px;">-->
+				<form id="searchForm" style="padding: 10px;">
+					<div>
+						标题： <input id="in-name" name="title" type="text" class="easyui-textbox input-style" style="width: 200px;" />
+						状态： <select id="state" class="easyui-combobox" name="state" style="width:200px;"></select>
+					</div>
+					<div>
+						作者： <input name="author" type="text" class="easyui-textbox input-style" />
+
+					</div>
+					<div>
+						发布时间： <input name="start" type="text" class="easyui-datetimebox input-style" />
+						-
+						<input name="end" type="text" class="easyui-datetimebox input-style" />
+					</div>
+					<div>
+						更新时间： <input name="startupdate" type="text" class="easyui-datetimebox input-style" />
+						-
+						<input name="endupdate" type="text" class="easyui-datetimebox input-style" />
+					</div>
+					<div>
+						所属栏目： <select id="type" class="easyui-combobox" name="type" style="width: 280px;"></select>
+					</div>
+					<div>
+						<a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton"  data-options="iconCls:'icon-search'">查询</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearSearchform();"  data-options="iconCls:'icon-clear'">重置</a>
+					</div>
+				</form>
+				<table id="grid" style="margin: 0px;"></table>
+				<div id="editDlg">
+					<form id="editForm" style="padding: 10px;">
+						<input name="id" type="hidden"/>
+						<div style="margin-bottom:20px">
+							<input class="easyui-textbox input-style" name="title" data-options="label:'标题:',required:true"/>
+							<input class="easyui-textbox input-style" name="author"  data-options="label:'作者:',required:true">
+						</div>
+						<div style="margin-bottom:20px">
+							<input class="easyui-numberbox input-style" name="praise" data-options="label:'点赞数:',required:true">
+							<input class="easyui-numberbox input-style" name="clicks" data-options="label:'点击数:',required:true">
+						</div>
+						<div style="margin-bottom:20px">
+							所属栏目： <select id="type" class="easyui-combobox select-style" name="type"></select>
+							状态： <select id="status" class="easyui-combobox select-style" name="status"></select>
+						</div>
+						<div style="margin-bottom:20px">
+							<textarea id="content" style="width:800px;height:300px;" data-options="label:'内容:',required:true" name="content"></textarea>
+						</div>
+						<div style="padding:5px">
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" id="btnSave">保存</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" onclick="clearSearchform();">重置</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	</body>
+	<script>
+        var editor = null;
+        KindEditor.ready(function(K) {
+            window.editor = K.create('#content', {
+                items : [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+                    'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                    'anchor', 'link', 'unlink', '|', 'about'
+                ],
+                filePostName: "uploadFile",
+                uploadJson:  uri + item + 'img/' + 'save', //uri item
+                resizeType: 1,
+                afterBlur: function(){this.sync();},
+                formatUploadUrl: false,
+                allowPreviewEmoticons : true,
+                allowImageUpload : true
+            });
+            editor.html($("#content").html());
+        });
+        // 生成状态查询的下拉框
+        $('#state').combobox({
+            url: uri + port + item + '/getState',
+			method: 'GET',
+            valueField: 'id',
+            textField: 'text'
+        });
+
+        // 生成栏目查询的下拉框
+        $('#type').combobox({
+            url: uri + port + item + '/loadCatalogs',
+            valueField: 'id',
+            textField: 'name',
+            method: 'GET'
+        });
+        $('#status').combobox({
+            url: uri + port + item + '/getState',
+            valueField: 'id',
+            textField: 'text'
+        });
+	</script>
+</html>

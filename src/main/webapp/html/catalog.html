@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/easyui/jquery.easyui.min.js"></script>
+		<script src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script src="../js/easyui/jquery.serializejson.min.js"></script>
+	</head>
+	<body class="easyui-layout">
+	<script>
+		var width = 400;
+		var height = 280;
+        var name = "catalog/";
+        var columns=[[
+			{field:'--',title:'<input id="select" type=\"checkbox\" class=\"easyui-checkbox\" onclick=\"allselectRow();\">',
+				width:50,
+				formatter: function(value,row,index){
+			    var oper = '<input type=\"checkbox\" class=\"easyui-checkbox\">';
+				return oper;
+			}},
+            {field:'id',title:'编号',width:100},
+            {field:'name',title:'栏目名称',width:200},
+			{field:'url',title:'路径',width:300},
+			{field:'descr',title:'简介',width:300},
+            {field:'status',title:'状态',width:100, 
+				formatter: function(value, row, index) {
+					return showStatus(value);
+				}
+			},
+            {field:'-',title:'操作',width:300,formatter: function(value,row,index){
+					var oper = "<a href=\"javascript:void(0)\" onclick=\"edit(" + row.id + ')">修改</a>';
+					oper += ' <a href="javascript:void(0)" onclick="del(' + row.id + ')">删除</a>';
+                    return oper;
+                }}
+        ]];
+    </script>
+	<!--class="easyui-tabs" -->
+	<div id="tab" data-options="region: 'center'">
+		<!--<div class="easyui-panel panel-style" style="padding: 10px; border: 0px;">-->
+			<form id="searchForm" style="padding: 10px;">
+				<div>
+					名称： <input class="easyui-textbox input-style" name="name"/>
+					状态： <select class="easyui-combobox select-style" name="status"></select>
+				</div>
+				<a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton"  data-options="iconCls:'icon-search'">查询</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearSearchform();"  data-options="iconCls:'icon-clear'">重置</a>
+			</form>
+			<table id="grid"></table>
+			<div id="editDlg">
+				<form id="editForm" style="padding: 10px;">
+					<input id="id" name="id" type="hidden"/>
+					<div>
+						名称：<input class="easyui-textbox input-style" name="name"/>
+					</div>
+					<div>
+						url：<input class="easyui-textbox input-style" name="url"/>
+					</div>
+					<div>
+						简介：<input class="easyui-textbox input-style" name="descr"/>
+					</div>
+					<div>
+						状态： <select class="easyui-combobox select-style" name="status"></select>
+					</div>
+					<div>
+						<a href="javascript:void(0)" class="easyui-linkbutton"  data-options="iconCls:'icon-save'" id="btnSave">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" onclick="contentAddPage.clearForm()">重置</a>
+					</div>
+				</form>
+			<!--</div>-->
+		</div>
+	</div>
+	</body>
+	<script src="../js/crud.js"></script>
+</html>

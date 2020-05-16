@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pgl.xiao.dao.SecurityMapper">
+    <!--查询用户下的所有菜单-->
+    <select id="getMenusByUser" parameterType="java.lang.Integer" resultType="com.pgl.xiao.domain.Menu">
+        SELECT  m.* FROM  menu AS m INNER JOIN role_permission AS rp ON rp.pid = m.id
+        WHERE
+        rp.rid = (
+        SELECT  ur.rid  FROM  `user` AS u INNER JOIN user_role AS ur ON u.id = ur.uid
+        WHERE
+        u.id = #{userId}
+        )
+    </select>
+    <!--用户后台登录-->
+    <select id="getUserByLoginnameAndPasswd" parameterType="string" resultType="com.pgl.xiao.domain.User">
+        SELECT * FROM `user` WHERE loginname = #{loginname} AND passwd = #{passwd}
+    </select>
+    <!--通过角色找到菜单-->
+    <select id="getMenusByRole" parameterType="java.lang.Integer" resultType="com.pgl.xiao.domain.Menu">
+        SELECT m.* FROM role AS r INNER JOIN role_permission AS rp ON r.id = rp.rid
+	      INNER JOIN menu AS m ON m.id = rp.pid
+          WHERE r.id = #{roleId}
+    </select>
+    <!--更新角色菜单-->
+    <insert id="updateRoleMenu">
+        INSERT INTO `role_permission`(id, rid, pid) VALUES(NULL, #{rid}, #{pid});
+    </insert>
+</mapper>

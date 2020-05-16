@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			            http://www.springframework.org/schema/tx
+			            http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+			            http://www.springframework.org/schema/aop
+		                http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <tx:advice id="advice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <bean id="serviceLoggerAspect" class="com.pgl.xiao.core.aop.ServiceLoggerAspect"/>
+
+    <!--开启自动代理,可以在目标类中使用Aspect J注解-->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <aop:config>
+        <aop:aspect id="serviceLoggerAspectConfig" ref="serviceLoggerAspect">
+            <aop:pointcut
+                    expression="execution(* com.pgl.xiao.service.impl.*.*(..))" id="serviceLoggerPointCut"/>
+            <!-- 3.2管理通知Advice和切入点 -->
+            <!-- 3.2.1前置通知 -->
+            <aop:before method="before" pointcut-ref="serviceLoggerPointCut"/>
+            <!-- 3.2.1后置通知,在方法返回之后执行，就可以获得返回值 returning属性：用于设置后置通知的第二个参数名称，类型是Object -->
+            <aop:after-returning method="afterReturn" pointcut-ref="serviceLoggerPointCut"/>
+            <!-- 3.2.3环绕通知 -->
+            <aop:around method="arround" pointcut-ref="serviceLoggerPointCut"/>
+            <!-- 3.2.4抛出通知：用于处理程序发生的异常 -->
+            <!-- 如果程序没有异常，将不会执行增强 -->
+            <!-- throwing 属性：用于设置通知第二个参数的名称，类型为Throwable -->
+            <aop:after-throwing method="afterThrowing" pointcut-ref="serviceLoggerPointCut" throwing="e"/>
+            <!-- 3.2.5最终通知：无论程序发生任何事情，都将执行 -->
+            <aop:after method="after" pointcut-ref="serviceLoggerPointCut"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

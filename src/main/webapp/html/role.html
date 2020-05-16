@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="../css/general.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="../js/role-menu.js"></script>
+	</head>
+	<body class="easyui-layout">
+	<script>
+        var width = 400;
+        var height = 280;
+        var name = "role/";
+        var columns=[[
+            {field:'id',title:'编号',width:100},
+            {field:'name',title:'角色名称',width:200},
+            {field:'description',title:'描述',width:300},
+            {field:'-',title:'操作',width:300,formatter: function(value,row,index){
+                    var oper = "<a href=\"javascript:void(0)\" onclick=\"edit(" + row.id + ')">修改</a>';
+                    oper += ' <a href="javascript:void(0)" onclick="del(' + row.id + ')">删除</a>';
+                    return oper;
+                }}
+        ]];
+	</script>
+		<div id="tab"  data-options="region:'center'">
+			<table id="grid" style="margin: 0px;"></table>
+			<!--<div id="editDlg">-->
+				<!--<form id="editForm">-->
+					<!--<input name="id" type="hidden"/>-->
+					<!--<div>-->
+						<!--昵称： <input name="username" type="text" class="easyui-textbox input-style" />-->
+					<!--</div>-->
+					<!--<div>-->
+						<!--账号：<input name="loginname" type="text" class="easyui-textbox input-style" />-->
+					<!--</div>-->
+					<!--<div>-->
+						<!--密码： <input name="passwd" type="text" class="easyui-textbox input-style" />-->
+					<!--</div>-->
+					<!--<div>-->
+						<!--状态： <select class="easyui-combobox select-style" name="status"></select>-->
+					<!--</div>-->
+					<!--<div>-->
+						<!--描述：<input name="description" type="text" class="easyui-textbox input-style" />-->
+					<!--</div>-->
+					<!--<div>-->
+						<!--<input id="btnSave" type="button" class="btn btn-success" value="确定" />-->
+						<!--<button type="reset" class="btn btn-danger">清空</button>-->
+					<!--</div>-->
+				<!--</form>-->
+			<!--</div>-->
+		<!--</div>-->
+		<div data-options="region:'east',title:'权限列表',split:true"
+			 style="width: 500px;">
+			<ul id="tree"></ul>
+			<button id="btnSave" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</button>
+		</div>
+	</body>
+</html>

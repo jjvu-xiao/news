@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>博客后台管理</title>
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../css/adminbase.css">
+		<script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="../js/crud.js"></script>
+	</head>
+	<style>
+		* {
+			font-size: 12px;
+		}
+		#info li {
+			font-size: 18px;
+			text-align: center;
+			list-style: none;
+		}
+	</style>
+	<body class="easyui-layout" style="overflow-y: hidden;background-color:#D2E0F2;" fit="false" scroll="yes">
+		<noscript>
+			<div style=" position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;">
+				<img src="../images/noscript.gif" alt='抱歉，请开启脚本支持！' />
+			</div>
+		</noscript>
+
+		<!-- <div id="loading-mask" style="position:absolute;top:0px; left:0px; width:100%; height:100%; background:#D2E0F2; z-index:20000">
+			<div id="pageloading" style="position:absolute; top:50%; left:50%; margin:-120px 0px 0px -120px; text-align:center;  border:2px solid #8DB2E3; width:200px; height:40px;  font-size:14px;padding:10px; font-weight:bold; background:#fff; color:#15428B;">
+				<img src="images/loading.gif" align="absmiddle" /> 正在加载中,请稍候...
+			</div>
+		</div> -->
+
+		<!-- background: url(images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%; -->
+		<!-- <div region="north" split="true" border="false" style="overflow: hidden; height: 30px;  
+			line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+			<span style="float:right; padding-right:20px;" class="head">欢迎 <span id="username"></span> <a href="#" id="editpass">修改密码</a>
+				<a href="#" id="loginOut">安全退出</a></span>
+			<span style="padding-left:10px; font-size: 16px; "><img src="images/blocks.gif" width="20" height="20" align="absmiddle" />
+				管理系统</span>
+		</div> -->
+		<!-- <div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+			<div class="footer"></div>
+		</div> -->
+
+		<!--顶部功能区-->
+		 <div region="north" split="true" border="false" style="overflow: hidden; height: 50px; padding-top: 10px;
+		        background: url(../images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+		        line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+			<span style="float:right; padding-right:20px;" class="head">
+				欢迎 <span id="username" class="icon-man"></span>
+				<a href="javascript:void(0)" id="editpass" style="color: #FFFFFF;">修改密码</a>
+				<a href="javascript:void(0)" id="user" style="color: #FFFFFF;" data-options="iconCls:'icon-man'">
+				</a>
+				<a href="javascript:void(0)" id="loginOut" style="color: #FFFFFF;">安全退出</a>
+			</span>
+			<span style="padding-left:10px; font-size: 16px; ">
+				<img src="../images/blocks.gif" width="20" height="20" align="absmiddle" /> 博客后台管理
+			</span>
+		</div>
+
+		<!--下边栏-->
+		<div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+			<div class="footer"></div>
+		</div>
+
+		<!--  导航内容 -->
+		<div region="west" split="true" title="功能导航" style="width:180px;" id="west">
+			<!--功能树-->
+			<div id="menutree"></div>
+		    <div id="mm" class="easyui-menu" style="width:120px;" data-options="onClick:menuHandler">
+		        <div>
+		            <span data-options="name:'new'">新建</span>
+		            <div style="width:150px;">
+		                <div>
+		                	<b>菜单</b>
+		                </div>
+		            </div>
+		        </div>
+        		<div class="menu-sep"></div>
+	        	<div>取消</div>
+   			</div>
+		</div>
+		<!--background:url(../images/indexbg.jpg)"-->
+		<!--主要内容-->
+		<div id="mainPanle" region="center" style="overflow-y:hidden; margin: 0;background-color:#D2E0F2;">
+			<div id="tabs" class="easyui-tabs" fit="true" style="background-color:#D2E0F2;">
+				<div title="欢迎使用" style="padding:0px;overflow:hidden;">
+					<h1 align="center" style="font-size: xx-large">欢迎使用CMS系统</h1>
+					<!--<p style="font-size: xx-large;">-->
+						<!--系统环境-->
+					<!--</p>-->
+					<p id="server-info"></p>
+					<hr/>
+					<p style="text-align: center; font-size: xx-large">
+						浏览器环境
+					</p>
+					<p id="client-info"></p>
+				</div>
+			</div>
+		</div>
+
+
+		<!--id="tabs" class="easyui-tabs" fit="true" border="true"-->
+		<!-- 修改密码窗口-->
+		<!--修改密码窗口-->
+		<!-- <div id="w" class="easyui-dialog">
+			<div class="easyui-layout" fit="true">
+				<div region="center" border="false" style="padding: 10px; background: #fff;">
+					<table cellpadding=3>
+						<tr>
+							<td>旧密码：</td>
+							<td><input id="txtOldPass" type="password" class="txt01" /></td>
+						</tr>
+						<tr>
+							<td>新密码：</td>
+							<td><input id="txtNewPass" type="password" class="txt01" /></td>
+						</tr>
+						<tr>
+							<td>确认密码：</td>
+							<td><input id="txtRePass" type="password" class="txt01" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div> -->
+
+		<!-- 	<div id="mm" class="easyui-menu" style="width:150px;">
+			<div id="tabupdate">刷新</div>
+			<div class="menu-sep"></div>
+			<div id="close">关闭</div>
+			<div id="closeall">全部关闭</div>
+			<div id="closeother">除此之外全部关闭</div>
+			<div class="menu-sep"></div>
+			<div id="closeright">当前页右侧全部关闭</div>
+			<div id="closeleft">当前页左侧全部关闭</div>
+			<div class="menu-sep"></div>
+			<div id="exit">退出</div>
+		 </div> -->
+	</body>
+	<script>
+		function menuHandler(item){
+			alert(item.name)
+		}
+	    $("#west").bind('contextmenu',function(e){
+	        e.preventDefault();
+	        $('#mm').menu('show', {
+	            left: e.pageX,
+	            top: e.pageY,
+	            onClick:function(item) {
+	                console.log(item);
+	            }
+	        });
+	    });
+		$('#menutree').tree({
+			url: uri + port + item + mode + 'menu/' + 'load',
+			method: 'GET',
+			dataType: 'json',
+			onClick: function(node) {
+				if(node.children == null)
+					addTab(node.text, node.attributes, node.icon);
+			}
+		});
+
+		function addTab(title, href, icon) {
+			var tt = $('#tabs');
+			if (tt.tabs('exists', title)) { //如果tab已经存在,则选中并刷新该tab          
+				tt.tabs('select', title);
+				refreshTab({
+					tabTitle: title,
+					url: href
+				});
+			} else {
+				if (href) {
+					var content = '<iframe scrolling="yes" frameborder="0"  src="' + href +
+						'" style="width:100%;height:100%;"></iframe>';
+				} else {
+					var content = '未实现';
+				}
+				tt.tabs('add', {
+					title: title,
+					closable: true,
+					content: content,
+					iconCls: icon || 'icon-default'
+				});
+			}
+		}
+		/**     
+		 * 刷新tab 
+		 * @cfg  
+		 *example: {tabTitle:'tabTitle',url:'refreshUrl'} 
+		 *如果tabTitle为空，则默认刷新当前选中的tab 
+		 *如果url为空，则默认以原来的url进行reload 
+		 */
+		function refreshTab(cfg) {
+			var refresh_tab = cfg.tabTitle ? $('#tabs').tabs('getTab', cfg.tabTitle) : $('#tabs').tabs('getSelected');
+			if (refresh_tab && refresh_tab.find('iframe').length > 0) {
+				var _refresh_ifram = refresh_tab.find('iframe')[0];
+				var refresh_url = cfg.url ? cfg.url : _refresh_ifram.src;
+				_refresh_ifram.contentWindow.location.href = refresh_url;
+			}
+		}
+		// let user = sessionStorage["user"];
+		// console.log(user);
+		// $("#user").innerText = user.name;
+
+        $.ajax({
+            type: "GET",
+            url: uri + port + item + "/getSystemInfo",
+            success: function(msg){
+                var str = '<ul id="info">'
+					    + '<li>JAVA版本：' + msg.jdkversion + '</li>'
+						+ '<li>系统内存：' + msg.totalMemory + '</li>'
+						+ '<li>剩余内存：' + msg.freeMemory + '</li>'
+						+ '<li>CPU数量：' + msg.cpus + '</li>'
+					    + '<li>操作系统：' + msg.system + '</li>'
+                    	+ '<li>服务容器：' + msg.info + '</li>'
+						+ '</ul>';
+                $("#server-info").html(str);
+                var client  = '<ul id="info">'
+						+ '<li>(推荐使用Firefox或者Google Chrome浏览器，分辨率大于1366 * 768)</strong></li>'
+                    	+ '<li>浏览器名称：' + navigator.appName + '</li>'
+						+ '<li>浏览器版本号：' + navigator.appVersion + '</li>'
+						+ '<li>系统平台：' + navigator.platform + '</li>'
+                    	+ '<li>屏幕分辨率：' + screen.width + "*" + screen.height + '</li>'
+						+ '<li>是否启用Cookies：' + navigator.cookieEnabled + '</li>'
+						+ '<li>浏览器的用户代理报头：' + navigator.userAgent+ '</li>'
+						+ '</ul>';
+                $("#client-info").html(client);
+            },
+            complete: function() {
+
+            },
+            error: function() {
+
+            }
+        });
+		// $("#loading-mask").hide();
+	</script>
+</html>
