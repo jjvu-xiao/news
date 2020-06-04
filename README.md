@@ -3,35 +3,64 @@
 #### 介绍
 个人的新闻博客系统，基于Spring 5 + MyBatis 3.4的Java EE技术开发而成，文件存储采用了FastDFS + Nginx中间件，Redis作为缓存数据库，Tomcat 8.5，JRE 1.8以上环境。已经部署至个人的云服务器。
 
-#### 软件架构
-软件架构说明
+
+#### 运行环境
+1. JDK 1.8
+2. Maven 3.5
+3. MySQL 5.7 端口号：3306
+4. Nginx 服务器端口号：80
+5. Tomcat 服务器端口号：8080
+6. Redis 数据库
+
+#### 代码结构
+> news -- 项目根目录
+
+> > src -- 源代码根目录
+
+> > > main -- 主要发布代码
+
+> > > > java -- 主要后端代码
+
+> > > > > controller -- Spring MVC 控制器层
+
+> > > > > core -- 核心配置类
+
+> > > > > > aop -- Spring AOP 切面
+
+> > > > > > handler -- 些文件上传下载的配置器
+
+> > > > > > security --- 安全配置类
+
+> > > > > > ui -- UI Widget 配置 
+
+> > > > > dao -- 数据访问层
+
+> > > > > domain -- Model数据层
+
+> > > > > service -- 业务服务层
+
+> > > > > utils -- 工具
+
+> > > > resources -- 配置文件
+
+> > > > webapp -- 前端静态页面
+
+> > > test -- 测试代码
+
+> > pom.xml -- 项目依赖描述文件
+
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  修改 src/main/resources/settings.propertis文件
 
-#### 使用说明
+2.  运行mvn install 命令执行程序
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+#### 页面效果预览
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+![管理员登录](./readme/admin.PNG)
+<center>管理员登录</center>
 
 
-#### 码云特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
